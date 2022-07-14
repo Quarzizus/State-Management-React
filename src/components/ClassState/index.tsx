@@ -1,4 +1,5 @@
 import React from "react";
+import { Loading } from "../Loading";
 
 interface props {
   name: string;
@@ -6,6 +7,7 @@ interface props {
 
 interface typeState {
   error: boolean;
+  loading: boolean;
 }
 
 class ClassState extends React.Component<props, typeState> {
@@ -13,7 +15,15 @@ class ClassState extends React.Component<props, typeState> {
     super(props);
     this.state = {
       error: false,
+      loading: false,
     };
+  }
+
+  componentDidUpdate() {
+    if (!!this.state.loading)
+      setTimeout(() => {
+        this.setState({ loading: false });
+      }, 3000);
   }
 
   render() {
@@ -22,9 +32,12 @@ class ClassState extends React.Component<props, typeState> {
         <h2>{this.props.name}</h2>
         <p>Por favor ingrese un codigo de seguridad</p>
         {this.state.error && <p>El codigo no es el correcto c:</p>}
+        <Loading isLoading={this.state.loading as boolean} />
         <div>
           <input type="text" />
-          <button onClick={() => this.setState({ error: !this.state.error })}>
+          <button
+            onClick={() => this.setState({ loading: !this.state.loading })}
+          >
             Validar
           </button>
         </div>
