@@ -1,4 +1,5 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent } from "react";
+import { Error } from "../Error";
 import { Loading } from "../Loading";
 
 interface props {
@@ -8,7 +9,10 @@ interface props {
 interface typeState {
   error: boolean;
   loading: boolean;
+  value: string;
 }
+
+const SECRET = "type";
 
 class ClassState extends React.Component<props, typeState> {
   constructor(props: props | Readonly<props>) {
@@ -16,12 +20,19 @@ class ClassState extends React.Component<props, typeState> {
     this.state = {
       error: false,
       loading: false,
+      value: "",
     };
   }
 
   componentDidUpdate() {
     if (!!this.state.loading)
       setTimeout(() => {
+        if (this.state.value === SECRET) {
+          this.setState({ error: false });
+        } else {
+          this.setState({ error: true });
+        }
+
         this.setState({ loading: false });
       }, 3000);
   }
@@ -31,10 +42,16 @@ class ClassState extends React.Component<props, typeState> {
       <section>
         <h2>{this.props.name}</h2>
         <p>Por favor ingrese un codigo de seguridad</p>
-        {this.state.error && <p>El codigo no es el correcto c:</p>}
+        <Error isError={this.state.error} isLoading={this.state.loading} />
         <Loading isLoading={this.state.loading as boolean} />
         <div>
-          <input type="text" />
+          <input
+            type="text"
+            value={this.state.value}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              this.setState({ value: e.target.value })
+            }
+          />
           <button
             onClick={() => this.setState({ loading: !this.state.loading })}
           >

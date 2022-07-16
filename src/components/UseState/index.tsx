@@ -1,17 +1,30 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Error } from "../Error";
 import { Loading } from "../Loading";
 
 interface props {
   name: string;
 }
 
+const SECRET = "metare";
+
 const UseState = ({ name }: props) => {
-  const [error, _setError] = useState<Boolean>(false);
+  const [error, setError] = useState<Boolean>(false);
   const [loading, setLoading] = useState<Boolean>(false);
+  const [value, setValue] = useState<String>("");
+
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
 
   useEffect(() => {
     if (!!loading) {
       setTimeout(() => {
+        if (value === SECRET) {
+          setError(false);
+        } else {
+          setError(true);
+        }
         setLoading(false);
       }, 2000);
     }
@@ -21,10 +34,10 @@ const UseState = ({ name }: props) => {
     <section>
       <h2>{name}</h2>
       <p>Por favor ingrese un codigo de seguridad</p>
-      {error && <p>El código es erroneo</p>}
+      <Error isError={error as boolean} isLoading={loading as boolean} />
       <Loading isLoading={loading as boolean} />
       <div>
-        <input type="text" />
+        <input type="text" value={value as string} onChange={handleInput} />
         <button
           disabled={loading as boolean}
           onClick={() => setLoading(!loading)}
