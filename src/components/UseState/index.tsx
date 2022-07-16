@@ -12,6 +12,8 @@ const UseState = ({ name }: props) => {
   const [error, setError] = useState<Boolean>(false);
   const [loading, setLoading] = useState<Boolean>(false);
   const [value, setValue] = useState<String>("");
+  const [deleted, setDeleted] = useState<Boolean>(false);
+  const [confirmed, setConfirmed] = useState<Boolean>(false);
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -22,6 +24,7 @@ const UseState = ({ name }: props) => {
       setTimeout(() => {
         if (value === SECRET) {
           setError(false);
+          setDeleted(true);
         } else {
           setError(true);
         }
@@ -30,6 +33,29 @@ const UseState = ({ name }: props) => {
     }
   }, [loading]);
 
+  if (!!deleted && !confirmed)
+    return (
+      <section>
+        <p>procederemos a eliminar</p>
+        <button onClick={() => setConfirmed(true)}>Sí, estoy seguro</button>
+        <button onClick={() => setConfirmed(true)}>Nooo, fue aún nop</button>
+      </section>
+    );
+  if (!!deleted && !!confirmed)
+    return (
+      <section>
+        <h2>Se ha elimado exitosamente</h2>
+        <button
+          onClick={() => {
+            setConfirmed(false);
+            setDeleted(false);
+            setValue("");
+          }}
+        >
+          Volver
+        </button>
+      </section>
+    );
   return (
     <section>
       <h2>{name}</h2>
