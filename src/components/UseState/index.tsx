@@ -19,12 +19,22 @@ const UseState = ({ name }: props) => {
     setValue(e.target.value);
   };
 
+  const onConfirmed = () => {
+    setError(false);
+    setConfirmed(true);
+  };
+
+  const onReset = () => {
+    setConfirmed(false);
+    setDeleted(false);
+    setValue("");
+  };
+
   useEffect(() => {
     if (!!loading) {
       setTimeout(() => {
         if (value === SECRET) {
-          setError(false);
-          setDeleted(true);
+          onConfirmed();
         } else {
           setError(true);
         }
@@ -33,27 +43,19 @@ const UseState = ({ name }: props) => {
     }
   }, [loading]);
 
-  if (!!deleted && !confirmed)
+  if (!deleted && !!confirmed)
     return (
       <section>
         <p>procederemos a eliminar</p>
-        <button onClick={() => setConfirmed(true)}>Sí, estoy seguro</button>
-        <button onClick={() => setConfirmed(true)}>Nooo, fue aún nop</button>
+        <button onClick={() => setDeleted(true)}>Sí, estoy seguro</button>
+        <button onClick={onReset}>Nooo, fue aún nop</button>
       </section>
     );
   if (!!deleted && !!confirmed)
     return (
       <section>
         <h2>Se ha elimado exitosamente</h2>
-        <button
-          onClick={() => {
-            setConfirmed(false);
-            setDeleted(false);
-            setValue("");
-          }}
-        >
-          Volver
-        </button>
+        <button onClick={onReset}>Volver</button>
       </section>
     );
   return (
