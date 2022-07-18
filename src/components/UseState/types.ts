@@ -6,4 +6,12 @@ interface State {
   confirmed: boolean;
 }
 
-export type { State };
+type ActionShape =
+  | {
+      type: "VALUE";
+      payload: string;
+    }
+  | { type: "RESET" }
+  | { type: "CONFIRM" };
+
+export type { State, ActionShape };
